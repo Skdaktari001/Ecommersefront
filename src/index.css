@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #4F46E5;        /* Indigo 600 */
+  --primary-hover: #4338CA;  /* Indigo 700 */
+  --primary-light: #EEF2FF;  /* Indigo 50 */
+  --secondary: #64748B;      /* Slate 500 */
+  --accent: #F59E0B;         /* Amber 500 */
+  --bg-main: #F8FAFC;        /* Slate 50 */
+  --bg-sidebar: #0F172A;     /* Slate 900 */
+  --text-nav: #94A3B8;       /* Slate 400 */
+  --border-light: #E2E8F0;   /* Slate 200 */
+  --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bg-main);
+  color: #1E293B; /* Slate 800 for better readability */
+}
+
+a.active {
+  @apply bg-indigo-50 text-indigo-600 font-semibold;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D1D5DB;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
