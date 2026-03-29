@@ -2,19 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { backendUrl } from '../App';
-import { 
-  User, 
-  Mail, 
-  Shield, 
-  Clock, 
-  MoreVertical, 
-  Search, 
-  RefreshCw,
-  UserCheck,
-  UserX,
-  ExternalLink,
-  ChevronRight,
-  Loader2
+import {
+    User, Mail, Shield, Clock, Search, RefreshCw,
+    UserCheck, UserX, Loader2
 } from 'lucide-react';
 
 const Users = ({ token }) => {
@@ -23,18 +13,18 @@ const Users = ({ token }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const fetchUsers = async (showLoader = false) => {
+        if (!token) return;
         if (showLoader) setLoading(true);
+
         try {
-            const response = await axios.get(
-                `${backendUrl}api/user/`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            const response = await axios.get(`${backendUrl}api/user/`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
             if (response.data.success) {
                 setUsers(response.data.users || []);
             }
         } catch (error) {
-            console.error('Fetch users error:', error);
             toast.error('Failed to sync user database');
         } finally {
             setLoading(false);
@@ -42,11 +32,9 @@ const Users = ({ token }) => {
     };
 
     useEffect(() => {
-        if (token) {
-            fetchUsers(true);
-            const intervalId = setInterval(() => fetchUsers(false), 30000);
-            return () => clearInterval(intervalId);
-        }
+        fetchUsers(true);
+        const interval = setInterval(() => fetchUsers(false), 30000);
+        return () => clearInterval(interval);
     }, [token]);
 
     const filteredUsers = users.filter(user =>
@@ -56,167 +44,153 @@ const Users = ({ token }) => {
 
     const toggleUserStatus = async (userId, currentStatus) => {
         try {
-            const response = await axios.put(
+            const res = await axios.put(
                 `${backendUrl}api/user/${userId}/status`,
                 { active: !currentStatus },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            if (response.data.success) {
+            if (res.data.success) {
                 toast.success('User status updated');
                 fetchUsers();
             }
-        } catch (error) {
-            toast.error('Status sync failed');
+        } catch {
+            toast.error('Status update failed');
         }
     };
 
     return (
-        <div className="max-w-7xl px-4 py-8">
-            {/* Header Area */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div className="space-y-1">
-                  <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-4">
-                    <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
-                      <UserCheck className="text-white" size={24} />
-                    </div>
-                    Community
-                  </h1>
-                  <p className="text-[13px] text-slate-400 font-medium tracking-wide">Manage platform members and access levels.</p>
+        <div className="max-w-6xl px-4 py-8">
+
+            {/* ── Header ── */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                <div>
+                    <p className="text-[10px] font-bold tracking-[0.3em] text-[#D4AF37] uppercase mb-1">
+                        Community
+                    </p>
+                    <h1 className="text-2xl font-black tracking-tight text-neutral-900 flex items-center gap-3">
+                        <div
+                            className="w-10 h-10 rounded-xl flex items-center justify-center border border-[#D4AF37]/40"
+                            style={{ background: 'rgba(212,175,55,0.1)' }}
+                        >
+                            <UserCheck size={18} style={{ color: '#D4AF37' }} />
+                        </div>
+                        Users
+                    </h1>
                 </div>
-                
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    <div className="relative flex-1 md:w-72">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+
+                <div className="flex items-center gap-2">
+                    <div className="relative">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" size={14} />
                         <input
                             type="text"
-                            placeholder="Find member..."
+                            placeholder="Search users..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-[13px] focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all shadow-sm font-medium"
+                            className="pl-10 pr-4 py-2.5 bg-white border border-neutral-300 rounded-xl text-[12px] font-semibold text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/25 focus:border-[#D4AF37]/60 transition-all w-72"
                         />
                     </div>
+
                     <button
                         onClick={() => fetchUsers(true)}
-                        className="p-3 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all text-slate-400 hover:text-indigo-600 shadow-sm"
+                        className="p-2.5 bg-white border border-neutral-300 rounded-xl hover:bg-neutral-50 transition-all"
                     >
-                        <RefreshCw size={18} className={loading && users.length > 0 ? 'animate-spin' : ''} />
+                        <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
                     </button>
                 </div>
             </div>
 
-            {/* Main Content */}
-            <div className="bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="border-b border-slate-50 bg-slate-50/30">
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Member Identity</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest hidden lg:table-cell">Communication</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Clearance</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest sm:table-cell hidden">Node Status</th>
-                                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Operations</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-neutral-50">
-                            {loading && users.length === 0 ? (
-                                <tr>
-                                    <td colSpan="5" className="px-8 py-20 text-center">
-                                        <div className="flex flex-col items-center gap-3">
-                                            <Loader2 size={24} className="animate-spin text-neutral-200" />
-                                            <span className="text-[11px] font-bold text-neutral-300 uppercase tracking-widest">Syncing Directory...</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ) : filteredUsers.length === 0 ? (
-                                <tr>
-                                    <td colSpan="5" className="px-8 py-20 text-center">
-                                        <div className="flex flex-col items-center opacity-20 filter grayscale">
-                                            <User size={48} className="mb-4" />
-                                            <p className="text-[13px] font-bold text-black uppercase tracking-widest">No Matches Found</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredUsers.map((user) => (
-                                    <tr key={user.id} className="group hover:bg-indigo-50/30 transition-colors">
-                                        <td className="px-8 py-6">
-                                            <div className="flex items-center gap-4">
-                                                <div className="h-12 w-12 shrink-0 rounded-[18px] bg-slate-900 border border-slate-800 flex items-center justify-center overflow-hidden shadow-lg shadow-slate-200 group-hover:scale-110 transition-transform duration-500">
-                                                    <span className="text-[16px] font-black text-indigo-400">
-                                                        {user.name?.charAt(0).toUpperCase() || 'U'}
-                                                    </span>
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="text-[14px] font-black text-slate-900 truncate leading-none mb-1.5">
-                                                        {user.name || 'Anonymous Member'}
-                                                    </div>
-                                                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold tracking-widest uppercase">
-                                                        <Clock size={10} className="text-indigo-400" />
-                                                        v {new Date(user.createdAt).toLocaleDateString()}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6 hidden lg:table-cell">
-                                            <div className="flex items-center gap-2 text-[13px] text-slate-500 font-medium">
-                                                <Mail size={14} className="text-indigo-300" />
-                                                {user.email}
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <span className={`
-                                                inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all
-                                                ${user.isAdmin ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20' : 'bg-slate-50 text-slate-400 border-slate-100'}
-                                            `}>
-                                                <Shield size={10} />
-                                                {user.isAdmin ? 'Master Admin' : 'Client Node'}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-6 sm:table-cell hidden">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-2 h-2 rounded-full ${user.isActive !== false ? 'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.5)]' : 'bg-slate-200'}`}></div>
-                                                <span className={`text-[10px] font-black uppercase tracking-widest ${user.isActive !== false ? 'text-slate-900' : 'text-slate-300'}`}>
-                                                    {user.isActive !== false ? 'Verified' : 'Banned'}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button
-                                                    onClick={() => toggleUserStatus(user.id, user.isActive !== false)}
-                                                    className={`
-                                                        w-10 h-10 rounded-xl flex items-center justify-center border transition-all shadow-sm active:scale-90
-                                                        ${user.isActive !== false 
-                                                            ? 'bg-slate-50 border-slate-100 text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-100' 
-                                                            : 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20'}
-                                                    `}
-                                                    title={user.isActive !== false ? 'Revoke Access' : 'Restore Access'}
-                                                >
-                                                    {user.isActive !== false ? <UserX size={16} /> : <UserCheck size={16} />}
-                                                </button>
-                                                <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-white border border-slate-100 text-slate-300 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm active:scale-95">
-                                                    <ChevronRight size={18} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+            {/* ── Loading ── */}
+            {loading && users.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-24 gap-4">
+                    <div className="relative w-12 h-12">
+                        <div className="absolute inset-0 rounded-xl border-2 border-[#D4AF37]/20"></div>
+                        <div className="absolute inset-0 rounded-xl border-t-2 border-[#D4AF37] animate-spin"></div>
+                    </div>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-neutral-500">
+                        Loading Users...
+                    </p>
                 </div>
-            </div>
 
-            {/* Footer Summary */}
-            {!loading && filteredUsers.length > 0 && (
-                <div className="mt-6 px-8 flex justify-between items-center text-[11px] font-bold text-neutral-400 uppercase tracking-widest">
-                    <span>Total Community: {users.length}</span>
-                    <span>Displaying {filteredUsers.length}</span>
+            ) : filteredUsers.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border-2 border-dashed border-neutral-200">
+                    <User size={28} className="text-neutral-400 mb-3" />
+                    <p className="text-[13px] font-black text-neutral-900">No Users Found</p>
+                </div>
+
+            ) : (
+                <div className="space-y-5">
+                    {filteredUsers.map((user) => (
+                        <div
+                            key={user.id}
+                            className="bg-white rounded-2xl border border-neutral-200 p-6 md:p-7 hover:border-[#D4AF37]/40 hover:shadow-lg transition-all"
+                        >
+                            <div className="flex flex-col md:flex-row gap-6">
+
+                                {/* ── User Info ── */}
+                                <div className="flex items-center gap-4 flex-1">
+                                    <div className="w-12 h-12 rounded-xl bg-neutral-900 flex items-center justify-center text-[#D4AF37] font-black">
+                                        {user.name?.charAt(0).toUpperCase() || 'U'}
+                                    </div>
+
+                                    <div>
+                                        <p className="text-[14px] font-black text-neutral-900">
+                                            {user.name || 'Anonymous'}
+                                        </p>
+                                        <div className="flex items-center gap-2 text-[12px] text-neutral-500">
+                                            <Mail size={12} />
+                                            {user.email}
+                                        </div>
+                                        <div className="flex items-center gap-2 text-[11px] text-neutral-400 mt-1">
+                                            <Clock size={11} />
+                                            Joined {new Date(user.createdAt).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ── Role ── */}
+                                <div className="flex flex-col justify-center">
+                                    <span className={`
+                    inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase border
+                    ${user.isAdmin
+                                            ? 'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30'
+                                            : 'bg-neutral-100 text-neutral-600 border-neutral-300'}
+                  `}>
+                                        <Shield size={11} />
+                                        {user.isAdmin ? 'Admin' : 'User'}
+                                    </span>
+                                </div>
+
+                                {/* ── Status + Action ── */}
+                                <div className="flex items-center justify-between md:justify-end gap-4">
+
+                                    <div className="text-[11px] font-bold">
+                                        <span className={user.isActive !== false ? 'text-emerald-600' : 'text-red-500'}>
+                                            {user.isActive !== false ? 'Active' : 'Disabled'}
+                                        </span>
+                                    </div>
+
+                                    <button
+                                        onClick={() => toggleUserStatus(user.id, user.isActive !== false)}
+                                        className={`
+                      px-3 py-2 rounded-xl text-[11px] font-bold border transition-all
+                      ${user.isActive !== false
+                                                ? 'bg-neutral-100 border-neutral-300 hover:bg-red-50 hover:border-red-200 text-neutral-700'
+                                                : 'bg-[#D4AF37] text-white border-[#D4AF37]'}
+                    `}
+                                    >
+                                        {user.isActive !== false ? 'Disable' : 'Enable'}
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
     );
 };
 
-export default Users;
+export default Users;
