@@ -3,8 +3,9 @@ import {
   Settings as SettingsIcon, Shield, Bell, Eye, 
   Globe, Database, Zap, Lock, HardDrive, 
   Save, RotateCcw, ChevronRight, Share2, 
-  Terminal, Cpu
+  Terminal, Cpu, UserPlus, ArrowRight
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Settings = ({ token }) => {
   const sections = [
@@ -124,6 +125,26 @@ const Settings = ({ token }) => {
           <button className="px-10 py-5 bg-indigo-600 text-white rounded-[24px] text-[11px] font-black uppercase tracking-[0.25em] hover:bg-indigo-700 hover:-translate-y-1 transition-all shadow-xl shadow-indigo-600/20 border border-indigo-500 active:translate-y-0">
              Launch Command Console
           </button>
+        </div>
+
+        {/* Admin Management Link */}
+        <div className="relative z-10 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center border border-indigo-500/20">
+              <UserPlus className="text-indigo-400" size={20} />
+            </div>
+            <div>
+              <h4 className="text-[14px] font-black uppercase tracking-widest">Authority Management</h4>
+              <p className="text-[12px] text-slate-400 font-medium">Provision or revoke administrative credentials.</p>
+            </div>
+          </div>
+          <Link 
+            to="/admin-management"
+            className="px-8 py-3.5 bg-white text-slate-900 rounded-[20px] text-[11px] font-black uppercase tracking-[0.2em] hover:bg-indigo-50 transition-all flex items-center gap-3 shadow-xl active:scale-95"
+          >
+            Manage Administrators
+            <ArrowRight size={14} className="text-indigo-600" />
+          </Link>
         </div>
         
         {/* Animated Background Decor */}

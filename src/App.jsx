@@ -1,11 +1,9 @@
-// App.jsx - UPDATED (remove BrowserRouter)
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom'; // Removed BrowserRouter
+import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-// Your existing components - using exact file names
 import NavBar from './components/NavBar';
 import Sidebar from './components/Sidebar';
 import Login from './components/Login';
@@ -18,12 +16,9 @@ import AdminManagement from './pages/AdminManagement';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Users from './pages/Users';
-
-// New components
 import UserProfile from './pages/UserProfile';
 import AdminReviews from './pages/AdminReviews';
 
-// Constants from your old code
 export const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000/";
 export const currency = '$';
 
@@ -31,9 +26,8 @@ const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
-  // Fetch user profile when token changes
   const fetchUserProfile = async (retryCount = 0) => {
     if (!token) {
       setUserProfile(null);
@@ -46,7 +40,7 @@ const App = () => {
         `${backendUrl}api/user-profile/profile`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          timeout: 15000 // Increased to 15s for Supabase cold starts
+          timeout: 15000
         }
       );
 
@@ -58,7 +52,7 @@ const App = () => {
         console.warn('Profile fetch timed out, retrying once...');
         return fetchUserProfile(retryCount + 1);
       }
-      
+
       console.error('Failed to fetch user profile:', error);
 
       if (error.response?.status === 401) {
@@ -67,7 +61,7 @@ const App = () => {
       }
     } finally {
       if (retryCount === 0 || !userProfile) {
-         setLoading(false);
+        setLoading(false);
       }
     }
   };
@@ -76,11 +70,10 @@ const App = () => {
     fetchUserProfile();
   }, [token]);
 
-  // Set axios default headers and timeout
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      axios.defaults.timeout = 15000; // Global 15s timeout
+      axios.defaults.timeout = 15000;
       localStorage.setItem('token', token);
     } else {
       delete axios.defaults.headers.common['Authorization'];
@@ -88,8 +81,6 @@ const App = () => {
       localStorage.removeItem('token');
     }
   }, [token]);
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -118,15 +109,15 @@ const App = () => {
 
           {/* Main Layout Area */}
           <div className="flex flex-1 overflow-hidden">
-            {/* Responsive Sidebar */}
-            <Sidebar 
-              userProfile={userProfile} 
-              sidebarOpen={sidebarOpen} 
-              setSidebarOpen={setSidebarOpen} 
+            {/* Sidebar */}
+            <Sidebar
+              userProfile={userProfile}
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
             />
 
-            {/* Content Scroll Area */}
-            <main className="flex-1 overflow-y-auto bg-[#F9FAFB] p-4 md:p-8 lg:p-10">
+            {/* Content Scroll Area — lg:ml-64 offsets for the fixed sidebar on desktop */}
+            <main className="flex-1 overflow-y-auto bg-[#F9FAFB] p-4 md:p-8 lg:p-10 lg:ml-64">
               <div className="max-w-7xl mx-auto">
                 <Routes>
                   <Route path="/" element={<AdminDashboard token={token} />} />
@@ -150,4 +141,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App;

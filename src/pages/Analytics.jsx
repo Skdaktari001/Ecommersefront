@@ -1,125 +1,210 @@
-// pages/Analytics.jsx (if doesn't exist)
 import React from 'react';
 import { 
-  BarChart3, TrendingUp, Users, ShoppingBag, 
+  BarChart3, TrendingUp, Users, 
   ArrowUpRight, ArrowDownRight, Calendar, 
-  Filter, Download, Layout, Activity, Zap
+  Download, Activity, Zap, Layout
 } from 'lucide-react';
 
 const Analytics = ({ token }) => {
   const stats = [
-    { label: 'Market Velocity', value: '$128.4k', growth: '+12.5%', icon: TrendingUp, positive: true },
-    { label: 'Active Nodes', value: '2,842', growth: '+3.2%', icon: Users, positive: true },
-    { label: 'Protocol Yield', value: '18.4%', growth: '-0.8%', icon: Zap, positive: false },
-    { label: 'Conversion Delta', value: '4.2%', growth: '+1.1%', icon: Activity, positive: true },
+    { label: 'Total Revenue', value: '$128.4k', growth: '+12.5%', icon: TrendingUp, positive: true },
+    { label: 'Active Users', value: '2,842', growth: '+3.2%', icon: Users, positive: true },
+    { label: 'Profit Margin', value: '18.4%', growth: '-0.8%', icon: Zap, positive: false },
+    { label: 'Conversion Rate', value: '4.2%', growth: '+1.1%', icon: Activity, positive: true },
+  ];
+
+  const barData = [40, 60, 45, 90, 65, 80, 50, 70, 85, 95, 60, 75];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const insights = [
+    { label: 'Revenue Analysis', value: 88 },
+    { label: 'User Retention', value: 74 },
+    { label: 'Inventory Health', value: 91 },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-4">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
-              <BarChart3 className="text-white" size={24} />
+
+      {/* ── Header ── */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <div>
+          <p className="text-[10px] font-bold tracking-[0.3em] text-[#D4AF37] uppercase mb-1">Reporting</p>
+          <h1 className="text-2xl font-black tracking-tight text-neutral-900 flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center border border-[#D4AF37]/40"
+              style={{ background: 'rgba(212,175,55,0.1)' }}
+            >
+              <BarChart3 size={18} style={{ color: '#D4AF37' }} />
             </div>
-            Intelligence
+            Analytics
           </h1>
-          <p className="text-[13px] text-slate-400 font-medium tracking-wide uppercase">Real-time Performance Metrics</p>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[11px] font-black text-slate-400 uppercase tracking-widest shadow-sm">
-            <Calendar size={14} className="text-indigo-500" />
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-neutral-300 rounded-xl text-[11px] font-black text-neutral-700 uppercase tracking-widest">
+            <Calendar size={13} style={{ color: '#D4AF37' }} />
             Last 30 Days
           </div>
-          <button className="p-3 bg-slate-900 text-white rounded-2xl hover:bg-indigo-600 transition-all shadow-xl shadow-slate-900/10 active:scale-95">
-            <Download size={18} />
+          <button
+            className="p-2.5 text-white rounded-xl transition-all hover:-translate-y-0.5 border border-[#D4AF37]/40"
+            style={{ background: '#D4AF37', boxShadow: '0 8px 24px rgba(212,175,55,0.25)' }}
+          >
+            <Download size={15} />
           </button>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      {/* ── Stat Cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat, idx) => (
-          <div key={idx} className="bg-white border border-slate-100 p-8 rounded-[32px] hover:border-indigo-600 transition-all group shadow-xl shadow-slate-200/40">
-            <div className="flex justify-between items-start mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                <stat.icon size={22} />
+          <div
+            key={idx}
+            className="bg-white border border-neutral-200 p-6 rounded-2xl hover:border-[#D4AF37]/40 hover:shadow-lg transition-all group"
+          >
+            <div className="flex justify-between items-start mb-5">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center border border-[#D4AF37]/30 group-hover:scale-105 transition-transform duration-300"
+                style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37' }}
+              >
+                <stat.icon size={18} />
               </div>
-              <div className={`flex items-center gap-1 text-[11px] font-black px-3 py-1 rounded-full ${
-                stat.positive ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50'
+              <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border ${
+                stat.positive
+                  ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                  : 'text-red-600 bg-red-50 border-red-200'
               }`}>
-                {stat.positive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                {stat.positive ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
                 {stat.growth}
               </div>
             </div>
-            <p className="text-[11px] font-black uppercase tracking-widest text-slate-300 mb-2">{stat.label}</p>
-            <h3 className="text-3xl font-black text-slate-900 tracking-tighter">{stat.value}</h3>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2">{stat.label}</p>
+            <h3 className="text-2xl font-black text-neutral-900 tracking-tight">{stat.value}</h3>
           </div>
         ))}
       </div>
 
-      {/* Visually stunning placeholder for actual charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-[40px] p-10 shadow-xl shadow-slate-200/50 relative overflow-hidden group">
-          <div className="flex justify-between items-center mb-12">
+      {/* ── Charts Row ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {/* Growth Chart */}
+        <div className="lg:col-span-2 bg-white border border-neutral-200 rounded-2xl p-7">
+          <div className="flex justify-between items-start mb-7 pb-5 border-b border-neutral-200">
             <div>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">Growth Projection</h3>
-              <p className="text-[12px] text-slate-400 mt-1 uppercase tracking-widest">Market analysis & forecasting</p>
+              <p className="text-[10px] font-bold tracking-[0.25em] text-neutral-500 uppercase">Performance</p>
+              <h3 className="text-base font-black text-neutral-900 mt-0.5">Growth Overview</h3>
             </div>
-            <div className="flex gap-2">
-              <button className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 hover:text-indigo-600 transition-all border border-slate-100">
-                <Layout size={18} />
-              </button>
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-neutral-600">
+              <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
+              Revenue
             </div>
           </div>
-          
-          {/* Decorative Graph Placeholder */}
-          <div className="h-[300px] w-full flex items-end gap-3 px-4">
-               {[40, 60, 45, 90, 65, 80, 50, 70, 85, 95, 60, 75].map((val, i) => (
-                 <div 
-                    key={i} 
-                    className="flex-1 bg-slate-50 rounded-t-2xl group-hover:bg-indigo-50 transition-all duration-1000"
-                    style={{ height: `${val}%`, transitionDelay: `${i * 30}ms` }}
-                 ></div>
-               ))}
+
+          {/* Bar Chart */}
+          <div className="h-[260px] w-full flex items-end gap-2 px-2">
+            {barData.map((val, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                <div
+                  className="w-full rounded-t-lg transition-all duration-700 hover:opacity-80 cursor-pointer"
+                  style={{
+                    height: `${val * 2.2}px`,
+                    background: val >= 85
+                      ? '#D4AF37'
+                      : 'rgba(212,175,55,0.2)',
+                    transitionDelay: `${i * 40}ms`
+                  }}
+                ></div>
+                <span className="text-[9px] font-bold text-neutral-500 uppercase">{months[i]}</span>
+              </div>
+            ))}
           </div>
-          
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-[4px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700">
-            <div className="bg-indigo-600 text-white px-10 py-4 rounded-[20px] text-[11px] font-black uppercase tracking-[0.25em] shadow-2xl shadow-indigo-600/30">
-              Protocol Syncing
-            </div>
+
+          <div className="mt-5 pt-4 border-t border-neutral-200 flex items-center justify-between">
+            <p className="text-[11px] font-semibold text-neutral-600">
+              Peak month: <span className="font-black text-neutral-900">October</span>
+            </p>
+            <button className="text-[10px] font-black text-neutral-600 uppercase tracking-widest hover:text-[#D4AF37] transition-colors">
+              Full Report
+            </button>
           </div>
         </div>
 
-        <div className="bg-slate-900 rounded-[40px] p-10 shadow-2xl relative overflow-hidden flex flex-col justify-between border border-slate-800">
-          <div className="relative z-10">
-            <div className="w-16 h-16 rounded-[24px] bg-indigo-600 flex items-center justify-center text-white mb-10 shadow-lg shadow-indigo-600/20 border border-indigo-500">
-              <Zap size={28} fill="white" />
+        {/* Insights Panel */}
+        <div
+          className="rounded-2xl p-7 flex flex-col justify-between border border-neutral-800"
+          style={{ background: '#111111' }}
+        >
+          <div>
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 border border-[#D4AF37]/30"
+              style={{ background: 'rgba(212,175,55,0.12)' }}
+            >
+              <Zap size={18} style={{ color: '#D4AF37' }} />
             </div>
-            <h3 className="text-2xl font-black text-white tracking-tight mb-5">Enterprise Insights</h3>
-            <p className="text-slate-400 text-[14px] leading-relaxed font-medium">
-              Our neural engine is currently processing market deltas to provide predictive inventory management and risk optimization.
+            <p className="text-[10px] font-bold tracking-[0.3em] text-[#D4AF37] uppercase mb-1">AI Powered</p>
+            <h3 className="text-lg font-black text-white tracking-tight mb-3">Business Insights</h3>
+            <p className="text-neutral-400 text-[12px] leading-relaxed font-medium">
+              Analyzing market trends and inventory data to surface predictive insights and optimization opportunities.
             </p>
           </div>
-          
-          <div className="mt-12 space-y-6 relative z-10">
-            <div className="p-6 bg-white/[0.03] border border-white/[0.05] rounded-3xl backdrop-blur-md">
-              <div className="flex justify-between text-[10px] text-slate-400 uppercase tracking-[0.2em] mb-3 font-black">
-                <span>Core Analysis</span>
-                <span className="text-indigo-400">88%</span>
+
+          <div className="mt-8 space-y-4">
+            {insights.map(({ label, value }) => (
+              <div
+                key={label}
+                className="p-4 rounded-xl border border-neutral-700"
+                style={{ background: 'rgba(255,255,255,0.03)' }}
+              >
+                <div className="flex justify-between text-[10px] uppercase tracking-widest mb-2 font-black">
+                  <span className="text-neutral-400">{label}</span>
+                  <span style={{ color: '#D4AF37' }}>{value}%</span>
+                </div>
+                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-1000"
+                    style={{ width: `${value}%`, background: '#D4AF37' }}
+                  ></div>
+                </div>
               </div>
-              <div className="h-2 w-full bg-white/[0.05] rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-500 w-[88%] rounded-full shadow-[0_0_20px_rgba(99,102,241,0.6)]"></div>
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* Abstract pattern decoration */}
-          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="mt-6 pt-5 border-t border-neutral-800">
+            <button
+              className="w-full py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all hover:-translate-y-0.5 border border-[#D4AF37]/30"
+              style={{ background: 'rgba(212,175,55,0.1)', color: '#D4AF37' }}
+            >
+              Generate Full Report
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* ── Secondary Stats ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+        {[
+          { label: 'Avg. Session Duration', value: '4m 32s', sub: 'Per user visit', icon: Activity },
+          { label: 'Repeat Customers', value: '63%', sub: 'Of total orders', icon: Users },
+          { label: 'Monthly Growth', value: '+8.4%', sub: 'vs last month', icon: TrendingUp },
+        ].map(({ label, value, sub, icon: Icon }) => (
+          <div
+            key={label}
+            className="bg-white border border-neutral-200 rounded-2xl p-6 hover:border-[#D4AF37]/40 hover:shadow-lg transition-all group"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">{label}</p>
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center border border-[#D4AF37]/30 group-hover:scale-105 transition-transform"
+                style={{ background: 'rgba(212,175,55,0.08)', color: '#D4AF37' }}
+              >
+                <Icon size={14} />
+              </div>
+            </div>
+            <p className="text-2xl font-black text-neutral-900">{value}</p>
+            <p className="text-[11px] text-neutral-500 font-semibold mt-1">{sub}</p>
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 };

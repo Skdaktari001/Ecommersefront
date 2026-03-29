@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { 
   LayoutDashboard, 
@@ -9,12 +9,7 @@ import {
   BarChart3, 
   Settings,
   Users as UsersIcon,
-  User,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  Menu,
-  X
+  User
 } from 'lucide-react'
 
 const Sidebar = ({ userProfile, sidebarOpen, setSidebarOpen }) => {
@@ -35,80 +30,150 @@ const Sidebar = ({ userProfile, sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* ✅ OVERLAY (Mobile Only) */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] lg:hidden transition-opacity"
+          className="fixed inset-0 lg:hidden z-[90]"
+          style={{
+            background: "rgba(0, 0, 0, 0.5)",
+            backdropFilter: "blur(6px)"
+          }}
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* ✅ SIDEBAR */}
       <aside 
-        className={`fixed lg:static inset-y-0 left-0 z-[70] w-64 bg-slate-900 border-r border-slate-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-[100] w-64 transform transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+        lg:translate-x-0`}
+        style={{
+          top: "54px", 
+          height: "calc(100vh - 54px)",
+          background: "var(--bg-sidebar)",
+          borderRight: "1px solid var(--border-light)"
+        }}
       >
         <div className="flex flex-col h-full">
-          {/* Header/Branding */}
-          <div className="h-20 flex items-center px-6 border-b border-slate-800">
-            <span className="text-xl font-black tracking-widest text-white flex items-center gap-3">
-              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <Shield size={20} className="text-white" />
+
+          {/* 🔥 HEADER */}
+          <div 
+            className="h-20 flex items-center px-6"
+            style={{ borderBottom: "1px solid var(--border-light)" }}
+          >
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-light)"
+                }}
+              >
+                <Shield size={18} style={{ color: "var(--primary)" }} />
               </div>
-              FOREVER
-            </span>
+
+              <span 
+                className="text-sm font-black tracking-[0.25em]"
+                style={{ color: "var(--text-muted)" }}
+              >
+                CYNAURA
+              </span>
+            </div>
           </div>
 
-          {/* Navigation Items */}
-          <nav className="flex-1 overflow-y-auto py-8 px-4 space-y-1.5">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-semibold transition-all group ${
-                    isActive 
-                      ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' 
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                  }`
-                }
-              >
-                <item.icon size={18} className={`${location.pathname === item.path ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'} transition-colors`} />
-                {item.label}
-              </NavLink>
-            ))}
+          {/* 🔥 NAV ITEMS */}
+          <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-2">
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.path
+
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-semibold transition-all group"
+                  style={{
+                    background: isActive 
+                      ? "rgba(212,175,55,0.1)" 
+                      : "transparent",
+                    color: isActive 
+                      ? "var(--primary)" 
+                      : "var(--text-muted)",
+                    border: isActive 
+                      ? "1px solid rgba(212,175,55,0.2)" 
+                      : "1px solid transparent"
+                  }}
+                >
+                  <item.icon 
+                    size={18} 
+                    style={{
+                      color: isActive 
+                        ? "var(--primary)" 
+                        : "var(--text-muted)"
+                    }}
+                  />
+
+                  <span className="flex-1">{item.label}</span>
+                </NavLink>
+              )
+            })}
           </nav>
 
-          {/* User Profile Footer */}
+          {/* 🔥 FOOTER */}
           {userProfile && (
-            <div className="p-4 border-t border-slate-800 bg-slate-900/50">
+            <div 
+              className="p-4"
+              style={{
+                borderTop: "1px solid var(--border-light)",
+                background: "rgba(255,255,255,0.02)"
+              }}
+            >
               <NavLink 
-                to="/profile" 
+                to="/profile"
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition-all group border border-transparent hover:border-slate-700 shadow-sm"
+                className="flex items-center gap-3 p-3 rounded-xl transition-all"
               >
-                <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden ring-2 ring-slate-700 ring-offset-2 ring-offset-slate-900">
+                <div 
+                  className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center"
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border-light)"
+                  }}
+                >
                   {userProfile.profileImage ? (
-                    <img src={userProfile.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                    <img 
+                      src={userProfile.profileImage} 
+                      alt="profile" 
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-500">
-                      <User size={18} />
-                    </div>
+                    <User size={18} style={{ color: "var(--text-muted)" }} />
                   )}
                 </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-[13px] font-bold text-white truncate">{userProfile.name}</p>
-                  <p className="text-[10px] text-slate-500 truncate uppercase tracking-widest font-medium">Administrator</p>
+
+                <div className="flex-1 min-w-0">
+                  <p 
+                    className="text-[13px] font-semibold truncate"
+                    style={{ color: "var(--text-main)" }}
+                  >
+                    {userProfile.name}
+                  </p>
+
+                  <p 
+                    className="text-[10px] uppercase tracking-widest truncate"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Administrator
+                  </p>
                 </div>
               </NavLink>
             </div>
           )}
+
         </div>
       </aside>
     </>
   )
 }
 
-export default Sidebar
+export default Sidebar
