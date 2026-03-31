@@ -6,9 +6,13 @@ import { toast } from 'react-toastify';
 const Login = ({ setToken }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false); 
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
+        
+        // ✅ Set loading to true when starting login
+        setLoading(true);
 
         // ✅ Log the backend URL to debug
         console.log("Backend URL:", backendUrl);
@@ -27,6 +31,9 @@ const Login = ({ setToken }) => {
         } catch (error) {
             console.log(error);
             toast.error(error.message);
+        } finally {
+            // ✅ Set loading to false when done (success or error)
+            setLoading(false);
         }
     }
 
@@ -57,7 +64,20 @@ const Login = ({ setToken }) => {
                             required
                         />
                     </div>
-                    <button className='mt-2 w-full py-2 px-4 rounded-md text-white bg-black' type='submit'>Login</button>
+                    <button
+                        className='mt-2 w-full py-2 px-4 rounded-md text-white bg-black flex items-center justify-center gap-2'
+                        type='submit'
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <>
+                                <span className="loading loading-spinner text-white"></span>
+                                Logging in...
+                            </>
+                        ) : (
+                            "Login"
+                        )}
+                    </button>
                 </form>
             </div>
         </div>
